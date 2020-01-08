@@ -1,0 +1,1 @@
+docker run -i -t -v ${PWD}:/battleship infinitecoding/platformio-for-ci /bin/bash
