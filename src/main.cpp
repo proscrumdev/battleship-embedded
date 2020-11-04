@@ -35,11 +35,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {23, 19, 18, 5}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {15, 2, 4, 16, 17}; //connect to the column pinouts of the keypad
 
-<<<<<<< HEAD
 //initialize the keypad
-=======
-//initialize class for KeyPad
->>>>>>> 2a9c8f25569451edd84339e2e95f8d2db82ef34a
 Keypad customKeypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 list<Ship> myFleet;
