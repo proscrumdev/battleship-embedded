@@ -7,6 +7,7 @@ DisplayManager::DisplayManager(){
 int DisplayManager::AddPage(Page page){
     OutputBuffer.insert(OutputBuffer.end(), page);
     CurrentPage++;
+    return CurrentPage;
 }
 
 Page & DisplayManager::GetLastPage(){

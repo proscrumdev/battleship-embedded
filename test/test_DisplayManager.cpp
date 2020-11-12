@@ -130,5 +130,6 @@ int test_DisplayManager::runDisplayManagerTests( int argc, char **argv) {
     RUN_TEST(test_UpdateExistingPage);
     RUN_TEST(test_CurrentPageIsLastPage);
     RUN_TEST(test_CurrentPageIsNotLastPage);
+    return 0;
 }
 #endif

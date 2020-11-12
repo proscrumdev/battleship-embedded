@@ -80,7 +80,6 @@ void test_ShouldNotHitShip() {
 }
 
 int test_GameController::runGameControllerTests( int argc, char **argv) {
-    //UNITY_BEGIN();
     RUN_TEST(test_StringConcat);
     RUN_TEST(test_CharToLetter_A);
     RUN_TEST(test_CharToLetter_B);
@@ -88,6 +87,6 @@ int test_GameController::runGameControllerTests( int argc, char **argv) {
     RUN_TEST(test_dummy);
     RUN_TEST(test_ShouldHitShip);
     RUN_TEST(test_ShouldNotHitShip);
-    //UNITY_END();
+    return 0;
 }
 #endif
