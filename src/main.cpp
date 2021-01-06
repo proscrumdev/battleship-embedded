@@ -54,6 +54,20 @@ void UpdateDisplay() {
   lcd.print(page.Line4.c_str());
 }
 
+bool delayWithKeyPressedCheck(int milliseconds)
+{
+  char customKey = customKeypad.getKey();
+
+  for (int i=0; i<milliseconds/10; i++)
+  {
+    customKey = customKeypad.getKey();
+    if (customKey)
+      return true;
+    delay(10);
+  }
+  return false;
+}
+
 Position enterPosition(int offset) {
     char customKey;
     Letters letter;
@@ -147,7 +161,7 @@ void enterPositions(Ship& ship) {
 void fleetPlacement(list<Ship> &fleet) {
   fleet = gc.InitializeShips();
   
-  for(Ship ship : fleet)
+  for_each(fleet.begin(), fleet.end(), [](Ship &ship)
   {
     enterPositions(ship);
     Serial.println("Ship positions are:");
@@ -156,7 +170,7 @@ void fleetPlacement(list<Ship> &fleet) {
       Serial.print(gc.LetterToChar(pos.Column));
       Serial.println(pos.Row);
     }
-  }
+  });
 
   Page newPage;  
   newPage.Line1 = "Placement Done";
@@ -243,7 +257,7 @@ void playGame() {
         dm.GetCurrentPage().Line4 = "Miss";
       }
       UpdateDisplay();
-      delay(3000);
+      delayWithKeyPressedCheck(3000);
 
       Page computerPage = Page();
       auto computerpos = GetRandomPosition();
@@ -256,22 +270,22 @@ void playGame() {
       }
       dm.AddPage(computerPage);
       UpdateDisplay();
-      delay(3000);
+      delayWithKeyPressedCheck(3000);
   }
 }
 
-bool delayWithKeyPressedCheck(int milliseconds)
+void printFleetToConsole(list<Ship> &fleet)
 {
-  char customKey = customKeypad.getKey();
-
-  for (int i=0; i<milliseconds/10; i++)
+  // Print fleet to console for debug purpose
+  for(Ship ship : fleet)
   {
-    customKey = customKeypad.getKey();
-    if (customKey)
-      return true;
-    delay(10);
+    Serial.println(("Ship positions for ship " + ship.Name + " are:").c_str());
+    for (Position pos : ship.Positions)
+    {
+      Serial.print(gc.LetterToChar(pos.Column));
+      Serial.println(pos.Row);
+    }
   }
-  return false;
 }
 
 void setup() {
@@ -331,6 +345,10 @@ void setup() {
   
   fleetPlacement(myFleet);
   initializeEnemyFleet(enemyFleet);
+
+  // Print fleets for debugging purpose
+  printFleetToConsole(myFleet);
+  printFleetToConsole(enemyFleet);
 
   playGame();
 }
