@@ -74,7 +74,10 @@ Position enterPosition(int offset) {
         switch (customKey)
         {
         case '-':
+          if (x<=0)
+            break;
           x--;
+          lcd.setCursor(x+offset,3);
           lcd.print(" ");
           lcd.setCursor(x+offset,3);
           break;
