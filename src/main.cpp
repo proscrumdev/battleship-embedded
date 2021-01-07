@@ -54,6 +54,20 @@ void UpdateDisplay() {
   lcd.print(page.Line4.c_str());
 }
 
+bool delayWithKeyPressedCheck(int milliseconds)
+{
+  char customKey = customKeypad.getKey();
+
+  for (int i=0; i<milliseconds/10; i++)
+  {
+    customKey = customKeypad.getKey();
+    if (customKey)
+      return true;
+    delay(10);
+  }
+  return false;
+}
+
 Position enterPosition(int offset) {
     char customKey;
     Letters letter;
@@ -74,7 +88,10 @@ Position enterPosition(int offset) {
         switch (customKey)
         {
         case '-':
+          if (x<=0)
+            break;
           x--;
+          lcd.setCursor(x+offset,3);
           lcd.print(" ");
           lcd.setCursor(x+offset,3);
           break;
@@ -144,7 +161,7 @@ void enterPositions(Ship& ship) {
 void fleetPlacement(list<Ship> &fleet) {
   fleet = gc.InitializeShips();
   
-  for(Ship ship : fleet)
+  for_each(fleet.begin(), fleet.end(), [](Ship &ship)
   {
     enterPositions(ship);
     Serial.println("Ship positions are:");
@@ -153,7 +170,7 @@ void fleetPlacement(list<Ship> &fleet) {
       Serial.print(gc.LetterToChar(pos.Column));
       Serial.println(pos.Row);
     }
-  }
+  });
 
   Page newPage;  
   newPage.Line1 = "Placement Done";
@@ -240,7 +257,7 @@ void playGame() {
         dm.GetCurrentPage().Line4 = "Miss";
       }
       UpdateDisplay();
-      delay(3000);
+      delayWithKeyPressedCheck(3000);
 
       Page computerPage = Page();
       auto computerpos = GetRandomPosition();
@@ -253,7 +270,21 @@ void playGame() {
       }
       dm.AddPage(computerPage);
       UpdateDisplay();
-      delay(3000);
+      delayWithKeyPressedCheck(3000);
+  }
+}
+
+void printFleetToConsole(list<Ship> &fleet)
+{
+  // Print fleet to console for debug purpose
+  for(Ship ship : fleet)
+  {
+    Serial.println(("Ship positions for ship " + ship.Name + " are:").c_str());
+    for (Position pos : ship.Positions)
+    {
+      Serial.print(gc.LetterToChar(pos.Column));
+      Serial.println(pos.Row);
+    }
   }
 }
 
@@ -265,7 +296,7 @@ void setup() {
   pinMode(25, OUTPUT);
   pinMode(33, OUTPUT);
 
-  int LED1Value = 0;
+  int LED1Value = 1;
   int LED2Value = 4;
 
   // initialize the serial port
@@ -282,39 +313,42 @@ void setup() {
   dm.AddPage(newPage);
   UpdateDisplay();
  
-  char customKey = customKeypad.getKey();
-  while (!customKey)
+  while (true)
   {
-    customKey = customKeypad.getKey();
-    
-    digitalWrite(26, LOW);
-    digitalWrite(25, LOW);
-    digitalWrite(33, LOW);
     digitalWrite(12, LED1Value&1);
     digitalWrite(14, LED1Value&2);
     digitalWrite(27, LED1Value&4);
     LED1Value++;
+    if (LED1Value >= 8)
+      LED1Value = 1;
+    if (delayWithKeyPressedCheck(300))
+      break;
 
-    delay(150);
-
-    digitalWrite(12, LOW);
-    digitalWrite(14, LOW);
-    digitalWrite(27, LOW);
     digitalWrite(26, LED2Value&1);
     digitalWrite(25, LED2Value&2);
     digitalWrite(33, LED2Value&4);
     LED2Value++;
+    if (LED2Value >= 8)
+      LED2Value = 1;
 
-    delay(150);
+    if (delayWithKeyPressedCheck(300))
+      break;
   }
 
   // Ensure both LEDs are off when leaving the welcome screen
+  digitalWrite(12, LOW);
+  digitalWrite(14, LOW);
+  digitalWrite(27, LOW);
   digitalWrite(26, LOW);
   digitalWrite(25, LOW);
   digitalWrite(33, LOW);
   
   fleetPlacement(myFleet);
   initializeEnemyFleet(enemyFleet);
+
+  // Print fleets for debugging purpose
+  printFleetToConsole(myFleet);
+  printFleetToConsole(enemyFleet);
 
   playGame();
 }

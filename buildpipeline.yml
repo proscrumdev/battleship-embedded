@@ -1,0 +1,55 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+resources:
+  containers:
+  - container: platformio
+    image: infinitecoding/platformio-for-ci:latest   
+    options: -u root    
+
+trigger:
+- master
+
+jobs:
+- job: esp32_platformio
+  displayName: "PlatformIO build"
+  container: platformio
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps: 
+    - script: dir -a
+      displayName: "Open Battleship project directory"
+    - script: platformio test -e native -d . >> testresults.txt
+      displayName: "Run Unit Tests"
+      continueOnError: true
+    - script: python $(Build.SourcesDirectory)/_deploy/TestResultsParser.py testresults.txt testresults.xml
+      displayName: "Converting Test Results"
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: 'testresults.xml'
+        failTaskOnFailedTests: true
+    - script: platformio run -e esp32 -d .
+      displayName: "Build for ESP32 platform"
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(Build.SourcesDirectory)/.pio/build/esp32/
+        Contents: '*.bin'
+        TargetFolder: $(Build.ArtifactStagingDirectory)
+      displayName: "Copy build output files to ArtifactsStagingDirectory"
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(Build.SourcesDirectory)/_deploy
+        Contents: '*.ps1'
+        TargetFolder: $(Build.ArtifactStagingDirectory)
+      displayName: "Copy deployment scripts to ArtifactsStagingDirectory"
+    - task: PublishBuildArtifacts@1
+      inputs:
+        ArtifactName: 'Firmware'
+        PathtoPublish: $(Build.ArtifactStagingDirectory)
+        publishLocation: Container
+        TargetPath: .
