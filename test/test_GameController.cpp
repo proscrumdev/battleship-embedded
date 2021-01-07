@@ -89,5 +89,6 @@ int test_GameController::runGameControllerTests( int argc, char **argv) {
     RUN_TEST(test_ShouldHitShip);
     RUN_TEST(test_ShouldNotHitShip);
     //UNITY_END();
+    return 0;
 }
 #endif
