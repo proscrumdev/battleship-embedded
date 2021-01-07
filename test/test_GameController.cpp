@@ -35,10 +35,6 @@ void initializeFleet(list<Ship> &Fleet) {
     });
 }
 
-void test_dummy() {
-    TEST_ASSERT_EQUAL(1, 1);
-}
-
 void test_StringConcat() {
     int i = 23;
     string text = "Test ";
@@ -84,10 +80,8 @@ int test_GameController::runGameControllerTests( int argc, char **argv) {
     RUN_TEST(test_CharToLetter_A);
     RUN_TEST(test_CharToLetter_B);
     RUN_TEST(test_PositionToString);
-    RUN_TEST(test_dummy);
     RUN_TEST(test_ShouldHitShip);
     RUN_TEST(test_ShouldNotHitShip);
-    //UNITY_END();
     return 0;
 }
 #endif

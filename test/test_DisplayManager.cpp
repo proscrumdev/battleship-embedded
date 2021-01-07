@@ -122,12 +122,7 @@ void test_CurrentPageIsNotLastPage() {
     TEST_ASSERT_FALSE(result);
 }
 
-void test_dummy2() {
-    TEST_ASSERT_EQUAL(1, 1);
-}
-
 int test_DisplayManager::runDisplayManagerTests( int argc, char **argv) {
-    RUN_TEST(test_dummy2);
     RUN_TEST(test_AddingPage);
     RUN_TEST(test_GetLastPageAsCurrentPage);
     RUN_TEST(test_GetCurrentPage);
