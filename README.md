@@ -1,12 +1,28 @@
 # Battleship Embedded
 A simple game of Battleship, written in C++ for embedded devices (ESP32).
 
-The battleship case study for embedded development for the Professional Scrum Developer (PSD) training from scrum.org (www-scrum.org/psd)
+## Tools
+While the code might work with other development tools, it has been created and tested by using VSCode (https://code.visualstudio.com) with the PlatformIO extension (https://platformio.org). For just executing task on the CLI, PlatformIO Core is sufficient (https://docs.platformio.org/en/latest/core/installation.html)
 
-While the code might work with other development tools, it has been created and tested by using VSCode (https://code.visualstudio.com) with the PlatformIO extension (https://platformio.org).
+## Using Docker 
+If you do not want to install PlatformIO and other needed tools locally, you can use a docker container to run the commands.
+
+```bash
+docker run -it -v ${PWD}:/battleship -w /battleship infinitecoding/platformio-for-ci bash
+```
 
 ## Build and upload firmware to device
-To build and upload the firmware, use the tasks provided by PlatformIO within VSCode.
+To build the project, use
+
+```bash
+pio run
+```
+
+To upload the firmware to the device, use
+
+```bash
+pio run --target upload
+```
 
 ## Run unit-tests
 To allow running unit-tests on a development machine or in a build process, the code is part of a platform independent library. You can use the PlatformIO CLI to execute these tests 
@@ -14,8 +30,13 @@ To allow running unit-tests on a development machine or in a build process, the 
 ```bash
 pio test -e native
 ```
-This requires a locally installed g++ compiler. Alternatively you can execute the tests within a docker container that comes with all necessary tools.
+This requires a locally installed g++ compiler. Alternatively you can execute the tests within a docker container (see above) that comes with all necessary tools.
+
+## Deployment
+You might find some helpful scripts in the _deploy folder.
+
+To flash the firmware on the device, the esptool can be used. This is installed together with PlatformIO or can be installed separately by running
 
 ```bash
-docker run -it -v ${PWD}:/battleship -w /battleship infinitecoding/platformio-for-ci bash
+pip install esptool
 ```
