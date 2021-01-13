@@ -1,7 +1,3 @@
-## This is a beta version which means this code has not been verified in a class scenario. So if you are the first person using this in class, you should spend some more time testing it upfront and we would be very happy to hear any issues or successes with it. 
-
-
-
 # Battleship Embedded
 A simple game of Battleship, written in C++ for embedded devices (ESP32).
 
