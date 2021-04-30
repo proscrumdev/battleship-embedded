@@ -25,7 +25,7 @@ pio run --target upload
 ```
 
 ## Run unit-tests
-To allow running unit-tests on a development machine or in a build process, the code is part of a platform independent library. You can use the PlatformIO CLI to execute these tests 
+To allow running unit-tests on a development machine or in a build process, the code is part of a platform independent library. You can use the PlatformIO CLI to execute these tests. You might have to run a `pio run -e native` once to install the native platform first.
 
 ```bash
 pio test -e native
