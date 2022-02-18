@@ -1,5 +1,6 @@
 # Battleship Embedded
 A simple game of Battleship, written in C++ for embedded devices (ESP32).
+![20210330_091355394_iOS](https://user-images.githubusercontent.com/11467601/154758318-84eafd62-75f5-4113-8d49-7534f8db370a.jpg)
 
 ## Tools
 While the code might work with other development tools, it has been created and tested by using VSCode (https://code.visualstudio.com) with the PlatformIO extension (https://platformio.org). For just executing task on the CLI, PlatformIO Core is sufficient (https://docs.platformio.org/en/latest/core/installation.html)
